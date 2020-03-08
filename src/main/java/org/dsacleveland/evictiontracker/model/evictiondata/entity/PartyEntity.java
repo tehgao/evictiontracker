@@ -8,6 +8,7 @@ import org.dsacleveland.evictiontracker.model.auth.User;
 import org.dsacleveland.evictiontracker.model.evictiondata.type.Party;
 import org.springframework.data.jpa.domain.AbstractAuditable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -21,9 +22,9 @@ import java.util.UUID;
 public class PartyEntity extends AbstractAuditable<User, UUID> implements Party<AddressEntity, AttorneyEntity> {
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity address;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private AttorneyEntity attorney;
 }

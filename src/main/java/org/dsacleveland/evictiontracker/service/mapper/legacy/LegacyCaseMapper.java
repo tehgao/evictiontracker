@@ -1,7 +1,9 @@
 package org.dsacleveland.evictiontracker.service.mapper.legacy;
 
+import org.dsacleveland.evictiontracker.model.evictiondata.entity.AttorneyEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.PartyEntity;
+import org.dsacleveland.evictiontracker.model.evictiondata.legacy.AttorneySet;
 import org.dsacleveland.evictiontracker.model.evictiondata.legacy.Defendant;
 import org.dsacleveland.evictiontracker.model.evictiondata.legacy.LegacyCase;
 import org.dsacleveland.evictiontracker.model.evictiondata.legacy.Plaintiff;
@@ -11,6 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper(uses = {LegacyAddressMapper.class})
 public interface LegacyCaseMapper extends DtoMapper<CaseEntity, LegacyCase> {
@@ -23,9 +26,21 @@ public interface LegacyCaseMapper extends DtoMapper<CaseEntity, LegacyCase> {
     @Override
     CaseEntity toEntity(LegacyCase legacyCase);
 
-    @Mapping(target = "attorney", expression = "java(attorneySet.get(0))")
     List<PartyEntity> listPlaintiffToEntity(List<Plaintiff> plaintiffs);
 
-    @Mapping(target = "attorney", expression = "java(attorneySet.get(0))")
     List<PartyEntity> listDefendantToEntity(List<Defendant> defendants);
+
+    @Mapping(source = "attorneySet", target = "attorney")
+    PartyEntity plaintiffToEntity(Plaintiff plaintiff);
+
+    @Mapping(source = "attorneySet", target = "attorney")
+    PartyEntity defendantToEntity(Defendant defendant);
+
+    default AttorneyEntity listToAttorney(List<AttorneySet> attorneys) {
+        return Optional.ofNullable(attorneys)
+                       .filter(atts -> atts.size() > 0)
+                       .map(attorney -> attorney.get(0))
+                       .map(at -> AttorneyEntity.builder().name(at.getName()).build())
+                       .orElse(null);
+    }
 }

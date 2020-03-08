@@ -13,12 +13,12 @@ import java.util.UUID;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
-public abstract class AbstractRestController<T> {
+public abstract class AbstractRestController<T, SVC extends EntityService<T, UUID>> {
 
-    private EntityService<T, UUID> entityService;
+    protected SVC entityService;
 
     @Autowired
-    public AbstractRestController(EntityService<T, UUID> entityService) {
+    public AbstractRestController(SVC entityService) {
         this.entityService = entityService;
     }
 
