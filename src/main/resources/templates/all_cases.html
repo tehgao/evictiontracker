@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/main :: head(Cases)">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<nav th:replace="fragments/main :: navbar" class="navbar navbar-expand-lg navbar-dark bg-dark"
+     aria-label="Navigation Bar">
+    <a class="navbar-brand" href="/">Evictions Tracker</a>
+</nav>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Eviction Cases</h1>
+        <p class="lead">Serving <span th:text="${numCases}">9001</span> Eviction Cases</p>
+    </div>
+</div>
+<div class="container" th:switch="${numCases}">
+    <div class="row" th:case="'0'">
+        <h2>No cases available</h2>
+    </div>
+    <div class="row" th:case="*">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Case Number</th>
+                <th scope="col">Filing Date</th>
+                <th scope="col">Plaintiffs</th>
+                <th scope="col">Defendants</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="case : ${cases.content}">
+                <td th:text="${case.caseNumber}">CVG 001</td>
+                <td th:text="${case.fileDate}">5/7/1994</td>
+                <td th:text="${case.plaintiffs}">John Doe</td>
+                <td th:text="${case.defendants}">Jane Doe</td>
+                <td>
+                    <a href="#" class="btn btn-primary btn-lg active"
+                       th:href="@{/cases/{id}(id=${case.id})}">Details</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <nav aria-label="Page Navigation">
+            <ul class="pagination">
+                <li class="page-item"
+                    th:class="@{page-item {active}(active=${cases.number == 0 ? 'disabled' : ''})}">
+                    <a class="page-link" href="#"
+                       th:href="@{/cases?page={num}(num=${cases.number})}">Previous</a>
+                </li>
+                <li th:each="pageIdx : ${pageRange}"
+                    th:class="@{page-item {active}(active=${pageIdx == cases.number + 1 ? 'active' : ''})}"
+                    class="page-item">
+                    <a class="page-link" href="#" th:text="${pageIdx}"
+                       th:href="@{/cases?page={num}(num=${pageIdx})}">1</a>
+                </li>
+                <li class="page-item"
+                    th:class="@{page-item {active}(active=${cases.number == cases.totalPages - 1 ? 'disabled' : ''})}">
+                    <a class="page-link" href="#"
+                       th:href="@{/cases?page={num}(num=${cases.number + 2})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src=" https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>

@@ -10,10 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public abstract class AbstractEntityService<T extends AbstractAuditable<User, UUID>,
-        DTO, R extends JpaRepository<T, UUID>> implements EntityService<DTO, UUID> {
+        DTO, R extends JpaRepository<T, UUID>> implements EntityService<T, DTO, UUID> {
 
     protected R repository;
 
@@ -26,38 +25,29 @@ public abstract class AbstractEntityService<T extends AbstractAuditable<User, UU
     }
 
     @Override
-    public DTO create(DTO obj) {
-        return this.mapper.toDto(
-                this.repository.save(this.mapper.toEntity(obj))
-        );
+    public T create(DTO obj) {
+        return this.repository.save(this.mapper.toEntity(obj));
     }
 
     @Override
-    public Optional<DTO> readOne(UUID uuid) {
+    public Optional<T> readOne(UUID uuid) {
         return this.repository
-                .findById(uuid)
-                .map(obj -> this.mapper.toDto(obj));
+                .findById(uuid);
     }
 
     @Override
-    public List<DTO> readAll() {
-        return this.repository
-                .findAll()
-                .stream()
-                .map(obj ->
-                        this.mapper.toDto(obj)
-                )
-                .collect(Collectors.toList());
+    public List<T> readAll() {
+        return this.repository.findAll();
     }
 
     @Override
-    public Optional<DTO> update(UUID uuid, DTO dto) {
+    public Optional<T> update(UUID uuid, DTO dto) {
         return this.repository
                 .findById(uuid)
                 .map(result -> {
                     T entity = this.mapper.toEntity(dto);
                     BeanUtils.copyProperties(entity, result);
-                    return this.mapper.toDto(this.repository.save(result));
+                    return this.repository.save(result);
                 });
     }
 

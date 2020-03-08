@@ -13,7 +13,7 @@ import java.util.UUID;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
-public abstract class AbstractRestController<T, SVC extends EntityService<T, UUID>> {
+public abstract class AbstractRestController<T, DTO, SVC extends EntityService<T, DTO, UUID>> {
 
     protected SVC entityService;
 
@@ -23,7 +23,7 @@ public abstract class AbstractRestController<T, SVC extends EntityService<T, UUI
     }
 
     @PostMapping("")
-    public ResponseEntity<T> create(@RequestBody T dto) {
+    public ResponseEntity<T> create(@RequestBody DTO dto) {
         return status(HttpStatus.CREATED).body(this.entityService.create(dto));
     }
 
@@ -41,7 +41,7 @@ public abstract class AbstractRestController<T, SVC extends EntityService<T, UUI
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable UUID id, @RequestBody T dto) {
+    public ResponseEntity<T> update(@PathVariable UUID id, @RequestBody DTO dto) {
         return ok(this.entityService.update(id, dto).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Could not update object with ID " + id + ", object not found")
