@@ -14,8 +14,6 @@ import java.util.List;
 @Service
 public class CaseService extends AbstractEntityService<CaseEntity, CaseDto, CaseRepository> {
 
-    private CaseRepository caseRepository;
-
     @Autowired
     public CaseService(CaseRepository repository) {
         super(repository, CaseMapper.INSTANCE);
