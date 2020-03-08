@@ -5,6 +5,7 @@ import org.dsacleveland.evictiontracker.model.evictiondata.legacy.LegacyCase;
 import org.dsacleveland.evictiontracker.service.evictiondata.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,8 +19,8 @@ public class CaseController extends AbstractRestController<CaseDto, CaseService>
         super(entityService);
     }
 
-    @PostMapping
-    public List<CaseDto> loadLegacyCases(List<LegacyCase> legacyCases) {
+    @PostMapping("/upload_legacy")
+    public List<CaseDto> loadLegacyCases(@RequestBody List<LegacyCase> legacyCases) {
         return this.entityService.importFromLegacy(legacyCases);
     }
 }

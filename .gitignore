@@ -32,3 +32,4 @@ build/
 
 ### Mock Data ###
 src/main/resources/json/
+src/main/resources/pdf/

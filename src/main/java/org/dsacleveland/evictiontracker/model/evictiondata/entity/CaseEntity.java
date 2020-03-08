@@ -21,7 +21,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CaseEntity extends AbstractAuditable<User, UUID> implements Case<PartyEntity, EventEntity> {
+    @Column(unique = true)
     private String caseNumber;
+    
     private LocalDate fileDate;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
