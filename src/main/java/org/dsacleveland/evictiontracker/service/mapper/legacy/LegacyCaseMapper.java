@@ -1,7 +1,7 @@
 package org.dsacleveland.evictiontracker.service.mapper.legacy;
 
+import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.AttorneyEntity;
-import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.EventEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.PartyEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.legacy.*;
@@ -17,16 +17,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Mapper(uses = {LegacyAddressMapper.class})
-public interface LegacyCaseMapper extends DtoMapper<CaseEntity, LegacyCase> {
+public interface LegacyCaseMapper extends DtoMapper<CaseDto, LegacyCase> {
     LegacyCaseMapper INSTANCE = Mappers.getMapper(LegacyCaseMapper.class);
 
     @Override
     @Mapping(target = "id", ignore = true)
-    LegacyCase toDto(CaseEntity entity);
+    LegacyCase toDto(CaseDto entity);
 
     @Override
     @Mapping(source = "eventSet", target = "events")
-    CaseEntity toEntity(LegacyCase legacyCase);
+    CaseDto toEntity(LegacyCase legacyCase);
 
     List<PartyEntity> listPlaintiffToEntity(List<Plaintiff> plaintiffs);
 

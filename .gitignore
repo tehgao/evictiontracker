@@ -33,3 +33,4 @@ build/
 ### Mock Data ###
 src/main/resources/json/
 src/main/resources/pdf/
+/src/main/resources/application-local.properties

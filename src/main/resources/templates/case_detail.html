@@ -63,7 +63,7 @@
                 <tbody>
                 <tr th:each="event : ${case.events}">
                     <td th:text="${event.eventType}">FC</td>
-                    <td th:text="${event.proSe ? Yes : No}">Yes</td>
+                    <td th:text="${event.proSe}">Yes</td>
                     <td th:text="${event.dateTime}">2012-09-01</td>
                 </tr>
                 </tbody>

@@ -9,6 +9,7 @@ import org.dsacleveland.evictiontracker.model.evictiondata.type.Case;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class CaseEntity extends AbstractAuditable<User, UUID> implements Case<PartyEntity, EventEntity> {
     @Column(unique = true)
     private String caseNumber;

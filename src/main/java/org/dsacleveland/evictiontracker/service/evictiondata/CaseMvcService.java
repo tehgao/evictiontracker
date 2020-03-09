@@ -1,8 +1,11 @@
 package org.dsacleveland.evictiontracker.service.evictiondata;
 
+import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.mvc.CaseSummary;
 import org.dsacleveland.evictiontracker.repository.CaseRepository;
+import org.dsacleveland.evictiontracker.service.mapper.DtoMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,8 +15,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class CaseMvcService extends CaseServiceImpl {
-    public CaseMvcService(CaseRepository repository) {
-        super(repository);
+
+    @Autowired
+    public CaseMvcService(CaseRepository repository, DtoMapper<CaseEntity, CaseDto> caseMapper) {
+        super(repository, caseMapper);
     }
 
     public List<CaseSummary> getAllCaseSummaries() {

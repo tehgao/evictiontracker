@@ -3,7 +3,7 @@ package org.dsacleveland.evictiontracker.service.mapper.legacy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
+import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.dsacleveland.evictiontracker.model.evictiondata.legacy.LegacyCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,7 +76,7 @@ public class LegacyCaseMapperTest {
                         "    \"file_date\": \"2020-01-03\"\n" +
                         "  }", LegacyCase.class);
 
-        CaseEntity actual = this.classUnderTest.toEntity(legacyCase);
+        CaseDto actual = this.classUnderTest.toEntity(legacyCase);
         System.out.println(actual);
     }
 }
