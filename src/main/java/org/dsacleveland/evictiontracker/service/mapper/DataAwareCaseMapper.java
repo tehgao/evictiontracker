@@ -1,15 +1,11 @@
 package org.dsacleveland.evictiontracker.service.mapper;
 
-import org.dsacleveland.evictiontracker.model.evictiondata.dto.AddressDto;
 import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
-import org.dsacleveland.evictiontracker.model.evictiondata.entity.AddressEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.PartyEntity;
-import org.dsacleveland.evictiontracker.repository.PartyRepository;
-import org.dsacleveland.evictiontracker.service.evictiondata.AddressServiceImpl;
+import org.dsacleveland.evictiontracker.service.evictiondata.AddressService;
+import org.dsacleveland.evictiontracker.service.evictiondata.PartyService;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -18,14 +14,14 @@ import java.util.stream.Collectors;
 @Primary
 public class DataAwareCaseMapper implements DtoMapper<CaseEntity, CaseDto> {
 
-    private AddressServiceImpl addressService;
-    private PartyRepository partyRepository;
+    private AddressService addressService;
+    private PartyService partyService;
 
     private CaseMapper caseMapper;
 
-    public DataAwareCaseMapper(AddressServiceImpl addressService, PartyRepository partyRepository) {
+    public DataAwareCaseMapper(AddressService addressService, PartyService partyService) {
         this.addressService = addressService;
-        this.partyRepository = partyRepository;
+        this.partyService = partyService;
         this.caseMapper = CaseMapper.INSTANCE;
     }
 
@@ -54,35 +50,10 @@ public class DataAwareCaseMapper implements DtoMapper<CaseEntity, CaseDto> {
     }
 
     public PartyEntity mapParty(PartyEntity entity) {
-        return this.partyRepository
+        return this.partyService
                 .findByName(entity.getName())
-                .orElseGet(() -> {
-                    entity.setAddress(this.mapAddress(entity.getAddress()));
-                    return entity;
-                });
-    }
-
-    public AddressEntity mapAddress(AddressEntity entity) {
-        return this.addressService
-                .findOne(Example.of(
-                        entity,
-                        ExampleMatcher
-                                .matching()
-                                .withIgnorePaths("createdBy", "createdDate", "lastModifiedBy",
-                                        "lastModifiedDate", "id", "new")
-                        )
-                )
-                .orElseGet(() -> addressService
-                        .create(AddressDto
-                                .builder()
-                                .streetAddress(entity.getStreetAddress())
-                                .streetAddressSecondary(entity
-                                        .getStreetAddressSecondary())
-                                .city(entity.getCity())
-                                .state(entity.getState())
-                                .zipCode(entity.getZipCode())
-                                .build()
-                        )
+                .orElseGet(() ->
+                        this.partyService.create(PartyMapper.INSTANCE.toDto(entity))
                 );
     }
 }

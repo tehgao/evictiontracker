@@ -1,8 +1,7 @@
 package org.dsacleveland.evictiontracker.controller.mvc;
 
-import org.dsacleveland.evictiontracker.model.evictiondata.mvc.CaseSummary;
-import org.dsacleveland.evictiontracker.service.evictiondata.CaseMvcService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.dsacleveland.evictiontracker.model.evictiondata.mvc.PartySummary;
+import org.dsacleveland.evictiontracker.service.evictiondata.PartyMvcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,48 +21,43 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Controller
-@RequestMapping("/cases")
-public class CaseMvcController {
+@RequestMapping("/parties")
+public class PartyMvcController {
 
-    private CaseMvcService caseMvcService;
+    private PartyMvcService partyMvcService;
 
-    @Autowired
-    public CaseMvcController(CaseMvcService caseMvcService) {
-        this.caseMvcService = caseMvcService;
+    public PartyMvcController(PartyMvcService partyMvcService) {
+        this.partyMvcService = partyMvcService;
     }
 
     @GetMapping
     public ModelAndView getAll(@RequestParam Optional<Integer> page, @RequestParam Optional<Integer> size) {
-        Page<CaseSummary> casePage = this.caseMvcService
-                .getPaginatedCaseSummaries(
-                        PageRequest.of(
-                                page.orElse(1) - 1,
-                                size.orElse(10),
-                                Sort.by("fileDate").descending()
-                        )
-                );
+        Page<PartySummary> partySummaryPage = this.partyMvcService.getPaginatedPartySummaries(
+                PageRequest.of(page.orElse(1) - 1, size.orElse(10), Sort.by("name"))
+        );
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("all_cases");
-        modelAndView.getModel().put("cases", casePage);
-        modelAndView.getModel().put("numCases", casePage.getTotalElements());
+        modelAndView.setViewName("all_parties");
+        modelAndView.getModel().put("parties", partySummaryPage);
         modelAndView.getModel()
                     .put("pageRange", IntStream
-                            .rangeClosed(1, casePage.getTotalPages())
+                            .rangeClosed(1, partySummaryPage.getTotalPages())
                             .boxed()
                             .collect(Collectors.toList())
                     );
+
         return modelAndView;
     }
 
     @GetMapping("/{id}")
     public ModelAndView getOne(@PathVariable UUID id) {
         return new ModelAndView(
-                "case_detail",
-                Map.of("case", this.caseMvcService
+                "party_detail",
+                Map.of("party", this.partyMvcService
                         .readOne(id)
                         .orElseThrow(() ->
-                                new ResponseStatusException(HttpStatus.NOT_FOUND, "Case with ID " + id + " not found")
+                                new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "Party with ID " + id + " not found")
                         )
                 )
         );

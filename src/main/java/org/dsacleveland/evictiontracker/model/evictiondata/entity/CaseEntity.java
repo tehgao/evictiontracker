@@ -1,5 +1,6 @@
 package org.dsacleveland.evictiontracker.model.evictiondata.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,15 +26,17 @@ import java.util.UUID;
 public class CaseEntity extends AbstractAuditable<User, UUID> implements Case<PartyEntity, EventEntity> {
     @Column(unique = true)
     private String caseNumber;
-    
+
     private LocalDate fileDate;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
     private List<PartyEntity> plaintiffs;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
+    @JsonManagedReference
     private List<PartyEntity> defendants;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

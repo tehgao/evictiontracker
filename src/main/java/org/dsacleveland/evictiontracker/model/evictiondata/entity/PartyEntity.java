@@ -1,5 +1,6 @@
 package org.dsacleveland.evictiontracker.model.evictiondata.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.springframework.data.jpa.domain.AbstractAuditable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -21,6 +23,14 @@ import java.util.UUID;
 public class PartyEntity extends AbstractAuditable<User, UUID> implements Party<AddressEntity, AttorneyEntity> {
     @Column(unique = true)
     private String name;
+
+    @ManyToMany(mappedBy = "plaintiffs")
+    @JsonBackReference
+    List<CaseEntity> isPlaintiffOf;
+
+    @ManyToMany(mappedBy = "defendants")
+    @JsonBackReference
+    List<CaseEntity> isDefendantOf;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity address;

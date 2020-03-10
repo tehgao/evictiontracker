@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/main :: head(Cases)">
+<!--/*@thymesVar id="case" type="org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity"*/-->
+<head th:replace="fragments/main :: head(${case.caseNumber})">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -62,7 +63,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="event : ${case.events}">
-                    <td th:text="${event.eventType}">FC</td>
+                    <td th:text="${event.eventType.getDescription()}">FC</td>
                     <td th:text="${event.proSe}">Yes</td>
                     <td th:text="${event.dateTime}">2012-09-01</td>
                 </tr>

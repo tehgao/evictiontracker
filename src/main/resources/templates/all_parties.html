@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/main :: head(Addresses)">
+<head th:replace="fragments/main :: head(Parties)">
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -18,34 +18,34 @@
 </nav>
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-2">Eviction Cases</h1>
-        <p class="lead">Serving <span th:text="${numCases}">9001</span> Eviction Cases</p>
+        <h1 class="display-2">Parties</h1>
+        <p class="lead">Serving <span th:text="${parties.totalElements}">9001</span> Eviction Parties</p>
     </div>
 </div>
-<div class="container" th:switch="${numCases}">
+<div class="container" th:switch="${parties.totalElements}">
     <div class="row" th:case="'0'">
-        <h2>No cases available</h2>
+        <h2>No parties available</h2>
     </div>
     <div class="row" th:case="*">
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">Case Number</th>
-                <th scope="col">Filing Date</th>
-                <th scope="col">Plaintiffs</th>
-                <th scope="col">Defendants</th>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">Cases Plaintiff Of</th>
+                <th scope="col">Cases Defendant Of</th>
                 <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="case : ${cases.content}">
-                <td th:text="${case.caseNumber}">CVG 001</td>
-                <td th:text="${case.fileDate}">5/7/1994</td>
-                <td th:text="${case.plaintiffs}">John Doe</td>
-                <td th:text="${case.defendants}">Jane Doe</td>
+            <tr th:each="party : ${parties.content}">
+                <td th:text="${party.name}">John Doe</td>
+                <td th:text="${party.address}">123 Main St. Apt. 12 Anytown, OH 12345</td>
+                <td th:text="${party.numCasesPlaintiffOf}">4</td>
+                <td th:text="${party.numCasesDefendantOf}">5</td>
                 <td>
                     <a href="#" class="btn btn-primary btn-lg active"
-                       th:href="@{/cases/{id}(id=${case.id})}">Details</a>
+                       th:href="@{/parties/{id}(id=${party.id})}">Details</a>
                 </td>
             </tr>
             </tbody>
@@ -53,20 +53,20 @@
         <nav aria-label="Page Navigation">
             <ul class="pagination">
                 <li class="page-item"
-                    th:class="@{page-item {active}(active=${cases.number == 0 ? 'disabled' : ''})}">
+                    th:class="@{page-item {active}(active=${parties.number == 0 ? 'disabled' : ''})}">
                     <a class="page-link" href="#"
-                       th:href="@{/cases?page={num}(num=${cases.number})}">Previous</a>
+                       th:href="@{/parties?page={num}(num=${parties.number})}">Previous</a>
                 </li>
                 <li th:each="pageIdx : ${pageRange}"
-                    th:class="@{page-item {active}(active=${pageIdx == cases.number + 1 ? 'active' : ''})}"
+                    th:class="@{page-item {active}(active=${pageIdx == parties.number + 1 ? 'active' : ''})}"
                     class="page-item">
                     <a class="page-link" href="#" th:text="${pageIdx}"
-                       th:href="@{/cases?page={num}(num=${pageIdx})}">1</a>
+                       th:href="@{/parties?page={num}(num=${pageIdx})}">1</a>
                 </li>
                 <li class="page-item"
-                    th:class="@{page-item {active}(active=${cases.number == cases.totalPages - 1 ? 'disabled' : ''})}">
+                    th:class="@{page-item {active}(active=${parties.number == parties.totalPages - 1 ? 'disabled' : ''})}">
                     <a class="page-link" href="#"
-                       th:href="@{/cases?page={num}(num=${cases.number + 2})}">Next</a>
+                       th:href="@{/parties?page={num}(num=${parties.number + 2})}">Next</a>
                 </li>
             </ul>
         </nav>

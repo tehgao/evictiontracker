@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="party" type="org.dsacleveland.evictiontracker.model.evictiondata.entity.PartyEntity"*/-->
+<head th:replace="fragments/main :: head(${party.name})">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<nav th:replace="fragments/main :: navbar" class="navbar navbar-expand-lg navbar-dark bg-dark"
+     aria-label="Navigation Bar">
+    <a class="navbar-brand" href="/">Evictions Tracker</a>
+</nav>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-2" th:text="${party.name}">GAO, ALVIN</h1>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row justify-content-center mt-4 mb-4 border-bottom">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body text-center">
+                    <h1 class="display-1" style="font-size: 150px" th:text="${party.isPlaintiffOf.size()}">10</h1>
+                </div>
+                <div class="card-footer text-center"><h3>Cases Plaintiff</h3></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body text-center">
+                    <h1 class="display-1" style="font-size: 150px" th:text="${party.isDefendantOf.size()}">10</h1>
+                </div>
+                <div class="card-footer text-center"><h3>Cases Defendant</h3></div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="min-height: 400px">
+        <div id="mapid" class="col"></div>
+    </div>
+    <div class="row mt-4 mb-4 border-bottom" th:if="${party.attorney != null && party.attorney != ''}">
+        <div class="col">
+            <h1>Attorney</h1>
+            <p th:text="${party.attorney.name}" class="lead">fkdfsjfdsklsds</p>
+        </div>
+    </div>
+    <div class="row mt-4 mb-4 border-bottom" th:if="${party.isPlaintiffOf.size() != 0}">
+        <div class="col">
+            <h1>Cases Plaintiff</h1>
+            <table class="table mt-2">
+                <thead>
+                <tr>
+                    <th scope="col">Case Number</th>
+                    <th scope="col">File Date</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="case : ${party.isPlaintiffOf}">
+                    <td th:text="${case.caseNumber}">CVG 1234</td>
+                    <td th:text="${case.fileDate}">74987849271894</td>
+                    <td class="text-right">
+                        <a href="#" class="btn btn-primary btn-lg active" th:href="@{/cases/{id}(id=${case.id})}">Details</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-4 mb-4 border-bottom" th:if="${party.isDefendantOf.size() != 0}">
+        <div class="col">
+            <h1>Cases Defendant</h1>
+            <table class="table mt-2">
+                <thead>
+                <tr>
+                    <th scope="col">Case Number</th>
+                    <th scope="col">File Date</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="case : ${party.isDefendantOf}">
+                    <td th:text="${case.caseNumber}">CVG 1234</td>
+                    <td th:text="${case.fileDate}">74987849271894</td>
+                    <td class="text-right">
+                        <a href="#" class="btn btn-primary btn-lg active" th:href="@{/cases/{id}(id=${case.id})}">Details</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src=" https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+<!-- LeafletJs stuff -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+<script th:inline="javascript">
+    var loc_address = /*[[${party.address.toPrintableString()}]]*/ "sfsafdsfs\nfdjfjdj\njkjfljsfkld";
+    var latitude = /*[[${party.address.coordinates.getLatitude()}]]*/ 41.348369;
+    var longitude = /*[[${party.address.coordinates.getLongitude()}]]*/ -81.824311;
+
+    var mymap = L.map('mapid').setView([latitude, longitude], 13);
+    var marker = L.marker([latitude, longitude]).addTo(mymap);
+    marker.bindPopup(loc_address).openPopup();
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1IjoiZ2FvdmluYWwiLCJhIjoiY2s3bGh0bTdlMDd0YzNscG1icjBhcDczdSJ9.P9PL4Ne_sb8mXrFBoMHDhw'
+    }).addTo(mymap);
+</script>
+</body>
+</html>

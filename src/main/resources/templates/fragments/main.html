@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="party" type="org.dsacleveland.evictiontracker.model.evictiondata.entity.PartyEntity"*/-->
 <head th:fragment="head (pagename)">
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -22,6 +23,9 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/cases">Cases</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/parties">Parties</a>
             </li>
         </ul>
         <span>
@@ -53,7 +57,7 @@
                 <h5>Attorney</h5>
                 <p th:text="${party.attorney.name}">Doe, Esq. John</p>
             </div>
-            <a href="#" class="btn btn-primary">Details</a>
+            <a href="#" th:href="@{/parties/{id}(id=${party.id})}" class="btn btn-primary">Details</a>
         </div>
     </div>
 </div>
