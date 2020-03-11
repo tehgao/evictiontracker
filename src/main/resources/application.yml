@@ -25,6 +25,10 @@ spring:
   security:
     oauth2:
       client:
+        registration:
+          okta:
+            client-id: ${okta.id}
+            client-secret: ${okta.secret}
         provider:
           okta:
             authorization-uri: https://dev-903534.okta.com/oauth2/v1/authorize
