@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 
 @Service
 @Primary
-@Profile("dev")
+@Profile("local-dev")
 @XSlf4j
 public class MockGeocoderService implements GeocoderService {
     @Override

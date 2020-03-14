@@ -1,4 +1,4 @@
-package org.dsacleveland.evictiontracker.service.utils;
+package org.dsacleveland.evictiontracker.service.util;
 
 import com.sendgrid.SendGrid;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ class EmailSenderServiceIT {
     public void setup() {
         String key = System.getProperty("sendgrid-apikey");
 
-        classUnderTest = new EmailSenderService(new SendGrid(key));
+        classUnderTest = new EmailSenderServiceImpl(new SendGrid(key));
     }
 
     @Test
