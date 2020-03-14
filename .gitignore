@@ -35,3 +35,4 @@ src/main/resources/json/
 src/main/resources/pdf/
 /src/main/resources/application-local.properties
 /src/main/resources/application-local.yml
+/src/test/resources/pdf_tests/

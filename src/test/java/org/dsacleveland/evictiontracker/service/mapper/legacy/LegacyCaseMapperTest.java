@@ -77,6 +77,5 @@ public class LegacyCaseMapperTest {
                         "  }", LegacyCase.class);
 
         CaseDto actual = this.classUnderTest.toEntity(legacyCase);
-        System.out.println(actual);
     }
 }

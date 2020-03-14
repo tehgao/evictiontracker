@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LegacyEntitiesTest {
+public class LegacyEntitiesIT {
     @Autowired
     private CaseService caseService;
 
