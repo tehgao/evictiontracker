@@ -1,0 +1,26 @@
+admin:
+  password: ${system.admin.password}
+com:
+  google:
+    apikey: ${system.google.apikey}
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: ${system.okta.client.id}
+            client-secret: ${system.okta.client.secret}
+        provider:
+          okta:
+            authorization-uri: ${system.okta.auth-uri}
+            token-uri: ${system.okta.token-uri}
+            user-info-uri: ${system.okta.user-info-uri}
+            user-name-attribute: sub
+            jwk-set-uri: ${system.okta.jwk-set-uri}
+  sendgrid:
+    api-key: ${system.sendgrid.api-key}
+org:
+  dsacleveland:
+    evictiontracker:
+      alert-email: ${system.alert-email}
