@@ -6,12 +6,7 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    initialSize: 5
-    maxActive: 10
-    maxIdle: 5
-    minIdle: 2
     password: xbmKXrvNbdTYkokAtGySLNXNxesLGa4Ca6jRvXbflLhC8oyOHVEPCWStbmuGriD
-    removeAbandoned: true
     url: jdbc:postgresql://localhost:5432/evictions
     username: evictionsuser
   jackson:
@@ -22,6 +17,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
   security:
     oauth2:
       client:
@@ -36,3 +32,5 @@ spring:
             user-info-uri: https://dev-903534.okta.com/oauth2/v1/userinfo
             user-name-attribute: sub
             jwk-set-uri: https://dev-903534.okta.com/oauth2/v1/keys
+  flyway:
+    locations: classpath:/migrations
