@@ -47,7 +47,7 @@ public class CaseController extends AbstractRestController<CaseEntity, CaseDto, 
         pdfUploadService.loadPdf(pdfFile.getBytes(), () ->
                 Optional.ofNullable(this.alertEmailAddr).ifPresent(email ->
                         emailSenderService.sendMessage(
-                                "gaovinal@gmail.com",
+                                alertEmailAddr,
                                 "Load started at " + now.toString() + " completed"
                         )
                 )
