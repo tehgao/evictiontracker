@@ -29,12 +29,12 @@ public class CaseEntity extends AbstractAuditable<User, UUID> implements Case<Pa
 
     private LocalDate fileDate;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<PartyEntity> plaintiffs;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     @JsonManagedReference
     private List<PartyEntity> defendants;

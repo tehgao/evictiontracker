@@ -15,7 +15,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
-@Profile("local")
+@Profile("basicauth")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${admin.password}")

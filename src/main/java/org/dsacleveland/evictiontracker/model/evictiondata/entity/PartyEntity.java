@@ -32,7 +32,7 @@ public class PartyEntity extends AbstractAuditable<User, UUID> implements Party<
     @JsonBackReference
     List<CaseEntity> isDefendantOf;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private AddressEntity address;
 
     @OneToOne(cascade = CascadeType.ALL)

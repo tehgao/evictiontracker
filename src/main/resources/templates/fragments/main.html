@@ -46,9 +46,9 @@
             <h5 class="card-title" th:text="${party.name}">Party Name</h5>
             <address>
                 <span th:text="${party.address.streetAddress}">1234 Test St.</span><br>
-                <span th:if="${party.address.streetAddressSecondary != ''}"
+                <span th:if="${party.address.streetAddressSecondary != null && party.address.streetAddressSecondary != ''}"
                       th:text="${party.address.streetAddressSecondary}">Apt. 101</span>
-                <br th:if="${party.address.streetAddressSecondary != ''}">
+                <br th:if="${party.address.streetAddressSecondary != null && party.address.streetAddressSecondary != ''}">
                 <span th:text="${party.address.city}">1234 Test St.</span>,
                 <span th:text="${party.address.state}">1234 Test St.</span>
                 <span th:text="${party.address.zipCode}">1234 Test St.</span>

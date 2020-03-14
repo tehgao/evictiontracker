@@ -45,7 +45,7 @@ public class DataAwarePartyMapper implements DtoMapper<PartyEntity, PartyDto> {
                 ExampleMatcher
                         .matching()
                         .withIgnorePaths("createdBy", "createdDate", "lastModifiedBy",
-                                "lastModifiedDate", "id", "new")
+                                "lastModifiedDate", "id", "new", "neighborhood", "coordinates")
                 )
         ).orElseGet(() -> addressService
                 .create(AddressDto
