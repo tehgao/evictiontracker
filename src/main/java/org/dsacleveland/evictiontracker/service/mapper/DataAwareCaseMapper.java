@@ -2,7 +2,6 @@ package org.dsacleveland.evictiontracker.service.mapper;
 
 import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
-import org.dsacleveland.evictiontracker.model.evictiondata.entity.PartyEntity;
 import org.dsacleveland.evictiontracker.service.evictiondata.AddressService;
 import org.dsacleveland.evictiontracker.service.evictiondata.PartyService;
 import org.springframework.context.annotation.Primary;
@@ -36,24 +35,22 @@ public class DataAwareCaseMapper implements DtoMapper<CaseEntity, CaseDto> {
 
         mapped.setPlaintiffs(mapped
                 .getPlaintiffs().stream()
-                .map(party -> this.mapParty(party))
+                .map(party -> this.partyService.findOrCreateNew(party))
                 .collect(Collectors.toList())
         );
 
         mapped.setDefendants(mapped
                 .getDefendants().stream()
-                .map(party -> this.mapParty(party))
+                .map(party -> this.partyService.findOrCreateNew(party))
                 .collect(Collectors.toList())
+        );
+
+        mapped.setProperty(
+                this.addressService.findOrCreateNew(mapped.getProperty())
         );
 
         return mapped;
     }
 
-    public PartyEntity mapParty(PartyEntity entity) {
-        return this.partyService
-                .findByName(entity.getName())
-                .orElseGet(() ->
-                        this.partyService.create(PartyMapper.INSTANCE.toDto(entity))
-                );
-    }
+
 }

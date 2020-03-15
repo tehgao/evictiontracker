@@ -20,4 +20,6 @@ public class CaseDto {
 
     private List<PartyDto> defendants;
     private List<EventDto> events;
+
+    private AddressDto property;
 }

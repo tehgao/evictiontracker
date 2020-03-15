@@ -92,6 +92,7 @@ public class PdfCaseParserImpl implements PdfCaseParser {
         }
         caseDto.setPlaintiffs(this.processPartyListSubpartition(segments.get(1)));
         caseDto.setDefendants(this.processPartyListSubpartition(segments.get(2)));
+        caseDto.setProperty(this.processPropertySubpartition(segments.get(3)).orElse(new AddressDto()));
         Matcher dateMatcher = Pattern.compile(".*(\\d{2}/\\d{2}/\\d{4}).*").matcher(segments.get(4).get(0));
         if (dateMatcher.matches()) {
             caseDto.setFileDate(LocalDate.parse(dateMatcher.group(1), DateTimeFormatter.ofPattern("MM/dd/yyyy")));
@@ -101,6 +102,28 @@ public class PdfCaseParserImpl implements PdfCaseParser {
         caseDto.setEvents(this.processEventsSubpartition(segments.get(5)));
 
         return Optional.of(caseDto);
+    }
+
+    private Optional<AddressDto> processPropertySubpartition(List<String> subpartition) {
+        AddressDto addressDto = new AddressDto();
+
+        addressDto.setStreetAddress(WordUtils.capitalizeFully(subpartition.get(1)));
+        if (subpartition.size() == 4) {
+            addressDto.setStreetAddress(WordUtils.capitalizeFully(subpartition.get(2)));
+        }
+
+        Pattern cityStateZip = Pattern.compile("(.+), ([A-Z]{2}) (.+)");
+        Matcher csz = cityStateZip.matcher(subpartition.get(subpartition.size() - 1));
+        if (!csz.matches()) {
+            log.error("Could not parse city, state, and/or zip code for address " + subpartition);
+            return Optional.empty();
+        } else {
+            addressDto.setCity(WordUtils.capitalizeFully(csz.group(1)));
+            addressDto.setState(csz.group(2));
+            addressDto.setZipCode(WordUtils.capitalizeFully(csz.group(3)));
+        }
+
+        return Optional.of(addressDto);
     }
 
     private List<EventDto> processEventsSubpartition(List<String> subpartition) {

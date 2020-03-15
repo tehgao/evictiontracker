@@ -13,4 +13,6 @@ public interface AddressService extends EntityService<AddressEntity, AddressDto,
     Optional<AddressEntity> findOne(Example<AddressEntity> addressEntity);
 
     List<AddressEntity> findByNeighborhood(String neighborhood);
+
+    AddressEntity findOrCreateNew(AddressEntity addressEntity);
 }

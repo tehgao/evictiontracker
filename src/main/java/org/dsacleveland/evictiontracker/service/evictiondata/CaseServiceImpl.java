@@ -31,4 +31,9 @@ public class CaseServiceImpl extends AbstractEntityService<CaseEntity, CaseDto, 
                     .map(legacyCase -> this.create(legacyCaseMapper.toEntity(legacyCase)))
                     .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CaseEntity> findByNeighborhood(String neighborhood) {
+        return this.repository.findAllByNeighborhood(neighborhood);
+    }
 }

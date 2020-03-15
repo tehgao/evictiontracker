@@ -29,6 +29,12 @@ public class CaseMvcService extends CaseServiceImpl {
                 .collect(Collectors.toList());
     }
 
+    public Page<CaseSummary> getPaginatedCaseSummaryByNeighborhood(String neighborhood, Pageable pageable) {
+        return this.repository
+                .findAllByNeighborhood(neighborhood, pageable)
+                .map(this::mapToCaseSummary);
+    }
+
     public Page<CaseSummary> getPaginatedCaseSummaries(Pageable pageable) {
         return this.repository.findAll(pageable).map(this::mapToCaseSummary);
     }

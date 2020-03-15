@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface PartyService extends EntityService<PartyEntity, PartyDto, UUID> {
     Optional<PartyEntity> findByName(String name);
+
+    PartyEntity findOrCreateNew(PartyEntity partyEntity);
 }

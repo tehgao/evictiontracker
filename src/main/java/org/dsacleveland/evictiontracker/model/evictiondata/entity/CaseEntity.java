@@ -42,4 +42,7 @@ public class CaseEntity extends AbstractAuditable<User, UUID> implements Case<Pa
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<EventEntity> events;
+
+    @ManyToOne
+    private AddressEntity property;
 }

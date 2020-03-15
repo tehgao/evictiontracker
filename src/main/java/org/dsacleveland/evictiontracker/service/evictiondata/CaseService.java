@@ -10,4 +10,6 @@ import java.util.UUID;
 
 public interface CaseService extends EntityService<CaseEntity, CaseDto, UUID> {
     List<CaseEntity> importFromLegacy(List<LegacyCase> cases);
+
+    List<CaseEntity> findByNeighborhood(String neighborhood);
 }

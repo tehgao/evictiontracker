@@ -8,6 +8,7 @@ import org.dsacleveland.evictiontracker.service.mapper.AddressMapper;
 import org.dsacleveland.evictiontracker.service.type.AbstractEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,5 +50,28 @@ public class AddressServiceImpl extends AbstractEntityService<AddressEntity, Add
     @Override
     public List<AddressEntity> findByNeighborhood(String neighborhood) {
         return this.repository.findByNeighborhood(neighborhood);
+    }
+
+    @Override
+    public AddressEntity findOrCreateNew(AddressEntity entity) {
+        return this.findOne(Example.of(
+                entity,
+                ExampleMatcher
+                        .matching()
+                        .withIgnorePaths("createdBy", "createdDate", "lastModifiedBy",
+                                "lastModifiedDate", "id", "new", "neighborhood", "coordinates")
+                )
+        ).orElseGet(() -> this
+                .create(AddressDto
+                        .builder()
+                        .streetAddress(entity.getStreetAddress())
+                        .streetAddressSecondary(entity
+                                .getStreetAddressSecondary())
+                        .city(entity.getCity())
+                        .state(entity.getState())
+                        .zipCode(entity.getZipCode())
+                        .build()
+                )
+        );
     }
 }
