@@ -92,7 +92,10 @@ public class PdfCaseParserImpl implements PdfCaseParser {
         }
         caseDto.setPlaintiffs(this.processPartyListSubpartition(segments.get(1)));
         caseDto.setDefendants(this.processPartyListSubpartition(segments.get(2)));
-        caseDto.setProperty(this.processPropertySubpartition(segments.get(3)).orElse(new AddressDto()));
+        caseDto.setProperty(this.processPartySubpartition(segments.get(3).subList(1, segments.get(3).size()))
+                                .map(party -> party.getAddress())
+                                .orElse(caseDto.getDefendants().get(0).getAddress())
+        );
         Matcher dateMatcher = Pattern.compile(".*(\\d{2}/\\d{2}/\\d{4}).*").matcher(segments.get(4).get(0));
         if (dateMatcher.matches()) {
             caseDto.setFileDate(LocalDate.parse(dateMatcher.group(1), DateTimeFormatter.ofPattern("MM/dd/yyyy")));
@@ -102,28 +105,6 @@ public class PdfCaseParserImpl implements PdfCaseParser {
         caseDto.setEvents(this.processEventsSubpartition(segments.get(5)));
 
         return Optional.of(caseDto);
-    }
-
-    private Optional<AddressDto> processPropertySubpartition(List<String> subpartition) {
-        AddressDto addressDto = new AddressDto();
-
-        addressDto.setStreetAddress(WordUtils.capitalizeFully(subpartition.get(1)));
-        if (subpartition.size() == 4) {
-            addressDto.setStreetAddress(WordUtils.capitalizeFully(subpartition.get(2)));
-        }
-
-        Pattern cityStateZip = Pattern.compile("(.+), ([A-Z]{2}) (.+)");
-        Matcher csz = cityStateZip.matcher(subpartition.get(subpartition.size() - 1));
-        if (!csz.matches()) {
-            log.error("Could not parse city, state, and/or zip code for address " + subpartition);
-            return Optional.empty();
-        } else {
-            addressDto.setCity(WordUtils.capitalizeFully(csz.group(1)));
-            addressDto.setState(csz.group(2));
-            addressDto.setZipCode(WordUtils.capitalizeFully(csz.group(3)));
-        }
-
-        return Optional.of(addressDto);
     }
 
     private List<EventDto> processEventsSubpartition(List<String> subpartition) {
@@ -179,7 +160,7 @@ public class PdfCaseParserImpl implements PdfCaseParser {
         PartyDto partyDto = new PartyDto();
         partyDto.setName(WordUtils.capitalizeFully(subpartition.get(0)));
 
-        Pattern attorney = Pattern.compile("(.+?) (\\w+( (I+|JR|SR))? ESQ, .+)");
+        Pattern attorney = Pattern.compile("(.+?) ([\\w']+( (I+|JR|SR))? ESQ, .+)");
 
         AddressDto addressDto = new AddressDto();
         Matcher m = attorney.matcher(subpartition.get(1));
@@ -191,12 +172,14 @@ public class PdfCaseParserImpl implements PdfCaseParser {
         }
 
         if (subpartition.size() == 4) {
-            Matcher m2 = attorney.matcher(subpartition.get(2));
-            if (m2.matches()) {
-                addressDto.setStreetAddressSecondary(WordUtils.capitalizeFully(m2.group(1)));
-                partyDto.setAttorney(new AttorneyDto(WordUtils.capitalizeFully(m2.group(2))));
-            } else {
-                addressDto.setStreetAddress(WordUtils.capitalizeFully(subpartition.get(2)));
+            addressDto.setStreetAddressSecondary(WordUtils.capitalizeFully(subpartition.get(2)));
+        } else {
+            Matcher secondary = Pattern
+                    .compile("(.*)\\s((#|up|down|dn|unit|apt|apartment|suite|ste)[ \\d].*)", Pattern.CASE_INSENSITIVE)
+                    .matcher(addressDto.getStreetAddress());
+            if (secondary.matches()) {
+                addressDto.setStreetAddressSecondary(secondary.group(2));
+                addressDto.setStreetAddress(secondary.group(1).trim());
             }
         }
 

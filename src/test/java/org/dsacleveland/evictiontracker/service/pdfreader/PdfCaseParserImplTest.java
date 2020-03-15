@@ -2,6 +2,7 @@ package org.dsacleveland.evictiontracker.service.pdfreader;
 
 import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Disabled
 class PdfCaseParserImplTest {
 
     private PdfCaseParser classUnderTest;
