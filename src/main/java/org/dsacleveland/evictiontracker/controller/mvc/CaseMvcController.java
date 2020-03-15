@@ -43,17 +43,24 @@ public class CaseMvcController {
                         )
                 );
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("all_cases");
-        modelAndView.getModel().put("cases", casePage);
-        modelAndView.getModel().put("numCases", casePage.getTotalElements());
-        modelAndView.getModel()
-                    .put("pageRange", IntStream
-                            .rangeClosed(1, casePage.getTotalPages())
-                            .boxed()
-                            .collect(Collectors.toList())
-                    );
-        return modelAndView;
+        return getAllCasesModelAndView(casePage, "");
+    }
+
+    @GetMapping("/search")
+    public ModelAndView search(@RequestParam String neighborhood,
+                               @RequestParam Optional<Integer> page,
+                               @RequestParam Optional<Integer> size) {
+        Page<CaseSummary> casePage = this.caseMvcService
+                .getPaginatedCaseSummaryByNeighborhood(
+                        neighborhood,
+                        PageRequest.of(
+                                page.orElse(1) - 1,
+                                size.orElse(10),
+                                Sort.by("fileDate").descending()
+                        )
+                );
+
+        return getAllCasesModelAndView(casePage, neighborhood);
     }
 
     @GetMapping("/{id}")
@@ -67,5 +74,20 @@ public class CaseMvcController {
                         )
                 )
         );
+    }
+
+    private ModelAndView getAllCasesModelAndView(Page<CaseSummary> casePage, String searchString) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("all_cases");
+        modelAndView.getModel().put("cases", casePage);
+        modelAndView.getModel().put("searchValue", searchString);
+        modelAndView.getModel().put("numCases", casePage.getTotalElements());
+        modelAndView.getModel()
+                    .put("pageRange", IntStream
+                            .rangeClosed(1, casePage.getTotalPages())
+                            .boxed()
+                            .collect(Collectors.toList())
+                    );
+        return modelAndView;
     }
 }

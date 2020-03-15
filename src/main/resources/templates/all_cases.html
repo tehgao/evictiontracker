@@ -19,10 +19,27 @@
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
         <h1 class="display-2">Eviction Cases</h1>
-        <p class="lead">Serving <span th:text="${numCases}">9001</span> Eviction Cases</p>
+        <form action="/cases/search" method="get">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Search</span>
+                </div>
+                <input type="text" id="neighborhood" name="neighborhood" class="form-control" placeholder="Neighborhood"
+                       aria-label="Search Neighborhood">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit" id="search-button">Submit</button>
+                </div>
+            </div>
+        </form>
+        <p class="lead">
+            Found <span th:text="${numCases}">9001</span> Eviction Cases</span>
+        </p>
     </div>
 </div>
 <div class="container" th:switch="${numCases}">
+    <div id="row">
+
+    </div>
     <div class="row" th:case="'0'">
         <h2>No cases available</h2>
     </div>
@@ -44,32 +61,26 @@
                 <td th:text="${case.plaintiffs}">John Doe</td>
                 <td th:text="${case.defendants}">Jane Doe</td>
                 <td>
-                    <a href="#" class="btn btn-primary btn-lg active"
+                    <a href="#" class="btn btn-primary active"
                        th:href="@{/cases/{id}(id=${case.id})}">Details</a>
                 </td>
             </tr>
             </tbody>
         </table>
-        <nav aria-label="Page Navigation">
-            <ul class="pagination">
-                <li class="page-item"
-                    th:class="@{page-item {active}(active=${cases.number == 0 ? 'disabled' : ''})}">
-                    <a class="page-link" href="#"
-                       th:href="@{/cases?page={num}(num=${cases.number})}">Previous</a>
-                </li>
-                <li th:each="pageIdx : ${pageRange}"
-                    th:class="@{page-item {active}(active=${pageIdx == cases.number + 1 ? 'active' : ''})}"
-                    class="page-item">
-                    <a class="page-link" href="#" th:text="${pageIdx}"
-                       th:href="@{/cases?page={num}(num=${pageIdx})}">1</a>
-                </li>
-                <li class="page-item"
-                    th:class="@{page-item {active}(active=${cases.number == cases.totalPages - 1 ? 'disabled' : ''})}">
-                    <a class="page-link" href="#"
-                       th:href="@{/cases?page={num}(num=${cases.number + 2})}">Next</a>
-                </li>
-            </ul>
-        </nav>
+        <div th:switch="${searchValue == ''}">
+            <div th:case="true">
+                <nav th:replace="fragments/main :: caseNav(${cases}, ${pageRange})"
+                     aria-label="Page Navigation">
+
+                </nav>
+            </div>
+            <div th:case="false">
+                <nav th:replace="fragments/main :: caseNavNeighborhoodSearch(${cases}, ${pageRange}, ${searchValue})"
+                     aria-label="Page Navigation">
+
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 

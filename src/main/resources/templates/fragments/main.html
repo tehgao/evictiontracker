@@ -60,6 +60,46 @@
             <a href="#" th:href="@{/parties/{id}(id=${party.id})}" class="btn btn-primary">Details</a>
         </div>
     </div>
+    <nav aria-label="Page Navigation" th:fragment="caseNav(cases, pageRange)">
+        <ul class="pagination">
+            <li class="page-item"
+                th:class="@{page-item {active}(active=${cases.number == 0 ? 'disabled' : ''})}">
+                <a class="page-link" href="#"
+                   th:href="@{/cases?page={num}(num=${cases.number})}">Previous</a>
+            </li>
+            <li th:each="pageIdx : ${pageRange}"
+                th:class="@{page-item {active}(active=${pageIdx == cases.number + 1 ? 'active' : ''})}"
+                class="page-item">
+                <a class="page-link" href="#" th:text="${pageIdx}"
+                   th:href="@{/cases?page={num}(num=${pageIdx})}">1</a>
+            </li>
+            <li class="page-item"
+                th:class="@{page-item {active}(active=${cases.number == cases.totalPages - 1 ? 'disabled' : ''})}">
+                <a class="page-link" href="#"
+                   th:href="@{/cases?page={num}(num=${cases.number + 2})}">Next</a>
+            </li>
+        </ul>
+    </nav>
+    <nav aria-label="Page Navigation" th:fragment="caseNavNeighborhoodSearch(cases, pageRange, query)">
+        <ul class="pagination">
+            <li class="page-item"
+                th:class="@{page-item {active}(active=${cases.number == 0 ? 'disabled' : ''})}">
+                <a class="page-link" href="#"
+                   th:href="@{/cases/search(page=${cases.number},neighborhood=${query})}">Previous</a>
+            </li>
+            <li th:each="pageIdx : ${pageRange}"
+                th:class="@{page-item {active}(active=${pageIdx == cases.number + 1 ? 'active' : ''})}"
+                class="page-item">
+                <a class="page-link" href="#" th:text="${pageIdx}"
+                   th:href="@{/cases/search(page=${pageIdx},neighborhood=${query})}">1</a>
+            </li>
+            <li class="page-item"
+                th:class="@{page-item {active}(active=${cases.number == cases.totalPages - 1 ? 'disabled' : ''})}">
+                <a class="page-link" href="#"
+                   th:href="@{/cases/search(page=${cases.number + 2},neighborhood=${query})}">Next</a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <!-- Optional JavaScript -->
