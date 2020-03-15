@@ -175,11 +175,13 @@ public class PdfCaseParserImpl implements PdfCaseParser {
             addressDto.setStreetAddressSecondary(WordUtils.capitalizeFully(subpartition.get(2)));
         } else {
             Matcher secondary = Pattern
-                    .compile("(.*)\\s((#|up|down|dn|unit|apt|apartment|suite|ste)[ \\d].*)", Pattern.CASE_INSENSITIVE)
+                    .compile("(.*?)\\s((#|up|down|dn|unit|apt|apartment|suite|ste)( .*|\\d.*)?)", Pattern.CASE_INSENSITIVE)
                     .matcher(addressDto.getStreetAddress());
             if (secondary.matches()) {
                 addressDto.setStreetAddressSecondary(secondary.group(2));
                 addressDto.setStreetAddress(secondary.group(1).trim());
+            } else {
+                addressDto.setStreetAddressSecondary("");
             }
         }
 

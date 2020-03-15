@@ -68,10 +68,11 @@
                    th:href="@{/cases?page={num}(num=${cases.number})}">Previous</a>
             </li>
             <li th:each="pageIdx : ${pageRange}"
-                th:class="@{page-item {active}(active=${pageIdx == cases.number + 1 ? 'active' : ''})}"
+                th:class="@{page-item {active}(active=${pageIdx == #strings.toString(cases.number + 1) ? 'active' : ''})}"
                 class="page-item">
-                <a class="page-link" href="#" th:text="${pageIdx}"
+                <a th:if="${pageIdx != '...'}" class="page-link" href="#" th:text="${pageIdx}"
                    th:href="@{/cases?page={num}(num=${pageIdx})}">1</a>
+                <a th:if="${pageIdx == '...'}" class="page-link disabled">...</a>
             </li>
             <li class="page-item"
                 th:class="@{page-item {active}(active=${cases.number == cases.totalPages - 1 ? 'disabled' : ''})}">

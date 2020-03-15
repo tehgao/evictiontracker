@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 
 @Controller
 @RequestMapping("/cases")
@@ -77,17 +78,34 @@ public class CaseMvcController {
     }
 
     private ModelAndView getAllCasesModelAndView(Page<CaseSummary> casePage, String searchString) {
+        List<String> indices = IntStream
+                .rangeClosed(1, casePage.getTotalPages())
+                .mapToObj(idx -> Integer.toString(idx))
+                .collect(Collectors.toList());
+
+        if (casePage.getTotalPages() > 15) {
+            int lowerBound = max(0, casePage.getNumber() - 1);
+            int upperBound = min(casePage.getNumber() + 2, casePage.getTotalPages());
+            List<String> tempIndices = new ArrayList<>();
+            if (lowerBound != 0) {
+                tempIndices.add("1");
+                tempIndices.add("...");
+            }
+            tempIndices.addAll(indices.subList(lowerBound, casePage.getNumber()));
+            tempIndices.addAll(indices.subList(casePage.getNumber(), upperBound));
+            if (upperBound != casePage.getTotalPages()) {
+                tempIndices.add("...");
+                tempIndices.add(Integer.toString(casePage.getTotalPages()));
+            }
+
+            indices = tempIndices;
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("all_cases");
         modelAndView.getModel().put("cases", casePage);
         modelAndView.getModel().put("searchValue", searchString);
         modelAndView.getModel().put("numCases", casePage.getTotalElements());
-        modelAndView.getModel()
-                    .put("pageRange", IntStream
-                            .rangeClosed(1, casePage.getTotalPages())
-                            .boxed()
-                            .collect(Collectors.toList())
-                    );
+        modelAndView.getModel().put("pageRange", indices);
         return modelAndView;
     }
 }

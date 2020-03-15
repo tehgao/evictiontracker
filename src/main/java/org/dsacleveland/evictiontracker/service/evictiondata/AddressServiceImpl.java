@@ -59,7 +59,7 @@ public class AddressServiceImpl extends AbstractEntityService<AddressEntity, Add
                 ExampleMatcher
                         .matching()
                         .withIgnorePaths("createdBy", "createdDate", "lastModifiedBy",
-                                "lastModifiedDate", "id", "new", "neighborhood", "coordinates")
+                                "lastModifiedDate", "id", "new")
                 )
         ).orElseGet(() -> this
                 .create(AddressDto

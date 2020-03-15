@@ -1,16 +1,19 @@
 package org.dsacleveland.evictiontracker.service.mapper;
 
+import lombok.extern.slf4j.XSlf4j;
 import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.dsacleveland.evictiontracker.model.evictiondata.entity.CaseEntity;
 import org.dsacleveland.evictiontracker.service.evictiondata.AddressService;
 import org.dsacleveland.evictiontracker.service.evictiondata.PartyService;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
 @Service
 @Primary
+@XSlf4j
 public class DataAwareCaseMapper implements DtoMapper<CaseEntity, CaseDto> {
 
     private AddressService addressService;
@@ -45,9 +48,14 @@ public class DataAwareCaseMapper implements DtoMapper<CaseEntity, CaseDto> {
                 .collect(Collectors.toList())
         );
 
-        mapped.setProperty(
-                this.addressService.findOrCreateNew(mapped.getProperty())
-        );
+        try {
+            mapped.setProperty(
+                    this.addressService.findOrCreateNew(mapped.getProperty())
+            );
+        } catch (DataAccessException e) {
+            log.error("Issue loading " + mapped.getProperty(), e);
+            throw e;
+        }
 
         return mapped;
     }
