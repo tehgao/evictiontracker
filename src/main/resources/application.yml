@@ -6,9 +6,7 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    password: xbmKXrvNbdTYkokAtGySLNXNxesLGa4Ca6jRvXbflLhC8oyOHVEPCWStbmuGriD
-    url: jdbc:postgresql://localhost:5432/evictions
-    username: evictionsuser
+    url: ${heroku.postgresql.ivory.url}
   jackson:
     property-naming-strategy: SNAKE_CASE
   jpa:
