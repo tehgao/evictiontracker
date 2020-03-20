@@ -9,6 +9,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -25,4 +26,6 @@ public interface CaseRepository extends JpaRepository<CaseEntity, UUID>,
                     "where p.neighborhood = :neighborhood"
     )
     Page<CaseEntity> findAllByNeighborhood(String neighborhood, Pageable pageable);
+
+    Optional<CaseEntity> findByCaseNumber(String caseNumber);
 }

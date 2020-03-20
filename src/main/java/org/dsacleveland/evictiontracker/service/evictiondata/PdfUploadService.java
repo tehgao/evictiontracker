@@ -1,5 +1,6 @@
 package org.dsacleveland.evictiontracker.service.evictiondata;
 
+import lombok.extern.slf4j.XSlf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.dsacleveland.evictiontracker.model.evictiondata.dto.CaseDto;
 import org.dsacleveland.evictiontracker.service.pdfreader.PdfCaseParser;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@XSlf4j
 public class PdfUploadService {
 
     private PdfCaseParser pdfCaseParser;
@@ -43,7 +45,13 @@ public class PdfUploadService {
 
         UUID taskId = this.uploadTaskService.startTask();
         taskExecutor.execute(() -> {
-            cases.forEach(caseDto -> caseService.create(caseDto));
+            cases.forEach(caseDto -> {
+                if (!caseService.caseWithNumberExists(caseDto.getCaseNumber())) {
+                    caseService.create(caseDto);
+                } else {
+                    log.info("Ignoring duplicate case " + caseDto.getCaseNumber());
+                }
+            });
             this.uploadTaskService.closeTask(taskId);
             callback.run();
         });

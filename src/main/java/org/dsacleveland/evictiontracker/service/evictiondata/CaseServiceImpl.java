@@ -36,4 +36,9 @@ public class CaseServiceImpl extends AbstractEntityService<CaseEntity, CaseDto, 
     public List<CaseEntity> findByNeighborhood(String neighborhood) {
         return this.repository.findAllByNeighborhood(neighborhood);
     }
+
+    @Override
+    public boolean caseWithNumberExists(String caseNumber) {
+        return this.repository.findByCaseNumber(caseNumber).isPresent();
+    }
 }
