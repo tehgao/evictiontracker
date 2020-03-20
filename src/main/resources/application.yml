@@ -6,7 +6,7 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    url: ${heroku.postgresql.ivory.url}
+    url: jdbc:${heroku.postgresql.ivory.url}
   jackson:
     property-naming-strategy: SNAKE_CASE
   jpa:
