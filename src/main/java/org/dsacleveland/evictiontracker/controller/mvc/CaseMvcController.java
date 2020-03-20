@@ -2,6 +2,7 @@ package org.dsacleveland.evictiontracker.controller.mvc;
 
 import org.dsacleveland.evictiontracker.model.evictiondata.mvc.CaseSummary;
 import org.dsacleveland.evictiontracker.service.evictiondata.CaseMvcService;
+import org.dsacleveland.evictiontracker.service.util.UploadTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,10 +28,12 @@ import static java.lang.Math.min;
 public class CaseMvcController {
 
     private CaseMvcService caseMvcService;
+    private UploadTaskService uploadTaskService;
 
     @Autowired
-    public CaseMvcController(CaseMvcService caseMvcService) {
+    public CaseMvcController(CaseMvcService caseMvcService, UploadTaskService uploadTaskService) {
         this.caseMvcService = caseMvcService;
+        this.uploadTaskService = uploadTaskService;
     }
 
     @GetMapping
@@ -62,6 +65,11 @@ public class CaseMvcController {
                 );
 
         return getAllCasesModelAndView(casePage, neighborhood);
+    }
+
+    @GetMapping("/upload-pdf")
+    public ModelAndView uploadPdf() {
+        return new ModelAndView("pdf_upload", Map.of("uploadTasks", this.uploadTaskService.getAllTasks()));
     }
 
     @GetMapping("/{id}")
