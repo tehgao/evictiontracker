@@ -47,7 +47,11 @@ public class PdfUploadService {
         taskExecutor.execute(() -> {
             cases.forEach(caseDto -> {
                 if (!caseService.caseWithNumberExists(caseDto.getCaseNumber())) {
-                    caseService.create(caseDto);
+                    try {
+                        caseService.create(caseDto);
+                    } catch (RuntimeException e) {
+                        log.error("Error creating case " + caseDto.getCaseNumber() + ": " + e.getLocalizedMessage());
+                    }
                 } else {
                     log.info("Ignoring duplicate case " + caseDto.getCaseNumber());
                 }
