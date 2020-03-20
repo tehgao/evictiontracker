@@ -6,9 +6,9 @@ spring:
     hikari:
       connectionTimeout: 20000
       maximumPoolSize: 5
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${jdbc.database.url}
+    username: ${jdbc.database.username}
+    password: ${jdbc.database.password}
   jackson:
     property-naming-strategy: SNAKE_CASE
   jpa:
