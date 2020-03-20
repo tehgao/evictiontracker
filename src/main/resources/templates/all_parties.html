@@ -50,27 +50,11 @@
             </tr>
             </tbody>
         </table>
-        <nav aria-label="Page Navigation">
-            <ul class="pagination">
-                <li class="page-item"
-                    th:class="@{page-item {active}(active=${parties.number == 0 ? 'disabled' : ''})}">
-                    <a class="page-link" href="#"
-                       th:href="@{/parties?page={num}(num=${parties.number})}">Previous</a>
-                </li>
-                <li th:each="pageIdx : ${pageRange}"
-                    th:class="@{page-item {active}(active=${pageIdx == parties.number + 1 ? 'active' : ''})}"
-                    class="page-item">
-                    <a class="page-link" href="#" th:text="${pageIdx}"
-                       th:href="@{/parties?page={num}(num=${pageIdx})}">1</a>
-                </li>
-                <li class="page-item"
-                    th:class="@{page-item {active}(active=${parties.number == parties.totalPages - 1 ? 'disabled' : ''})}">
-                    <a class="page-link" href="#"
-                       th:href="@{/parties?page={num}(num=${parties.number + 2})}">Next</a>
-                </li>
-            </ul>
-        </nav>
     </div>
+    <nav th:replace="fragments/main :: caseNav(${parties}, ${pageRange})"
+         aria-label="Page Navigation">
+
+    </nav>
 </div>
 
 <!-- Optional JavaScript -->

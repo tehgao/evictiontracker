@@ -84,25 +84,30 @@ public class PdfCaseParserImpl implements PdfCaseParser {
 
 
         CaseDto caseDto = new CaseDto();
-        Matcher caseNumberMatcher = Pattern.compile(".*(\\d{4} CVG \\d{6}).*").matcher(segments.get(0).get(0));
-        if (caseNumberMatcher.matches()) {
-            caseDto.setCaseNumber(caseNumberMatcher.group(1));
-        } else {
-            log.error("Could not parse case number from " + segments.get(0));
+        try {
+            Matcher caseNumberMatcher = Pattern.compile(".*(\\d{4} CVG \\d{6}).*").matcher(segments.get(0).get(0));
+            if (caseNumberMatcher.matches()) {
+                caseDto.setCaseNumber(caseNumberMatcher.group(1));
+            } else {
+                log.error("Could not parse case number from " + segments.get(0));
+            }
+            caseDto.setPlaintiffs(this.processPartyListSubpartition(segments.get(1)));
+            caseDto.setDefendants(this.processPartyListSubpartition(segments.get(2)));
+            caseDto.setProperty(this.processPartySubpartition(segments.get(3).subList(1, segments.get(3).size()))
+                                    .map(party -> party.getAddress())
+                                    .orElse(caseDto.getDefendants().get(0).getAddress())
+            );
+            Matcher dateMatcher = Pattern.compile(".*(\\d{2}/\\d{2}/\\d{4}).*").matcher(segments.get(4).get(0));
+            if (dateMatcher.matches()) {
+                caseDto.setFileDate(LocalDate.parse(dateMatcher.group(1), DateTimeFormatter.ofPattern("MM/dd/yyyy")));
+            } else {
+                log.error("Could not parse case file date from " + segments.get(4));
+            }
+            caseDto.setEvents(this.processEventsSubpartition(segments.get(5)));
+        } catch (RuntimeException e) {
+            log.error("Issue loading case file with info " + partition);
+            return Optional.empty();
         }
-        caseDto.setPlaintiffs(this.processPartyListSubpartition(segments.get(1)));
-        caseDto.setDefendants(this.processPartyListSubpartition(segments.get(2)));
-        caseDto.setProperty(this.processPartySubpartition(segments.get(3).subList(1, segments.get(3).size()))
-                                .map(party -> party.getAddress())
-                                .orElse(caseDto.getDefendants().get(0).getAddress())
-        );
-        Matcher dateMatcher = Pattern.compile(".*(\\d{2}/\\d{2}/\\d{4}).*").matcher(segments.get(4).get(0));
-        if (dateMatcher.matches()) {
-            caseDto.setFileDate(LocalDate.parse(dateMatcher.group(1), DateTimeFormatter.ofPattern("MM/dd/yyyy")));
-        } else {
-            log.error("Could not parse case file date from " + segments.get(4));
-        }
-        caseDto.setEvents(this.processEventsSubpartition(segments.get(5)));
 
         return Optional.of(caseDto);
     }

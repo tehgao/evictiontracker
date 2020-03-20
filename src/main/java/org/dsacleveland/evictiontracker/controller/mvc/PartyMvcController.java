@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("/parties")
@@ -36,15 +35,13 @@ public class PartyMvcController {
                 PageRequest.of(page.orElse(1) - 1, size.orElse(10), Sort.by("name"))
         );
 
+        List<String> indices = MvcControllerUtils.generateIndices(partySummaryPage);
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("all_parties");
         modelAndView.getModel().put("parties", partySummaryPage);
         modelAndView.getModel()
-                    .put("pageRange", IntStream
-                            .rangeClosed(1, partySummaryPage.getTotalPages())
-                            .boxed()
-                            .collect(Collectors.toList())
-                    );
+                    .put("pageRange", indices);
 
         return modelAndView;
     }
