@@ -1,0 +1,23 @@
+#!/bin/bash
+
+INPUT=$1
+OUTPUT=$2
+
+echo USAGE: parse [inputfile [outputfile]]
+
+if [ -n "$INPUT" ]; then
+    echo reading from $INPUT
+    if [ -n "$OUTPUT" ]; then
+        echo writing csv to $OUTPUT
+        java -jar parser.jar EvictionsTrackerApplication < "$INPUT" > "$OUTPUT"
+        exit
+    fi
+
+    echo writing csv to stdout
+    java -jar parser.jar EvictionsTrackerApplication < "$INPUT"
+    exit
+fi
+
+echo reading from stdin
+echo writing csv to stdout
+java -jar parser.jar EvictionsTrackerApplication

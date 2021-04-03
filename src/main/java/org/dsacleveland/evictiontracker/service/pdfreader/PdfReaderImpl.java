@@ -2,11 +2,9 @@ package org.dsacleveland.evictiontracker.service.pdfreader;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Service
 public class PdfReaderImpl implements PdfReader {
     @Override
     public String readFromPdf(PDDocument pdDocument) throws IOException {
